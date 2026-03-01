@@ -12,7 +12,7 @@ import { Platform } from "react-native";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-	apiKey: "AIzaSyCr2xHAAYOqhb2TYtAy499JI5notKHxS1I",
+	apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
 	authDomain: "mediva-health.firebaseapp.com",
 	projectId: "mediva-health",
 	storageBucket: "mediva-health.firebasestorage.app",

@@ -4,7 +4,7 @@ import Feather from "@expo/vector-icons/Feather";
 import { Image } from "expo-image";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import InterText from "@/components/InterText";
 
 export default function Profile() {
@@ -48,7 +48,7 @@ export default function Profile() {
 	};
 
 	return (
-		<View style={styles.container}>
+		<ScrollView style={styles.container}>
 			{/* Header */}
 			<View style={styles.header}>
 				<View style={styles.avatar}>
@@ -104,7 +104,7 @@ export default function Profile() {
 					<InterText style={[styles.actionText, { color: "#FF3B30" }]}>Logout</InterText>
 				</TouchableOpacity>
 			</View>
-		</View>
+		</ScrollView>
 	);
 }
 
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "#ffffff",
 		paddingHorizontal: 20,
-		paddingTop: 24,
+		paddingVertical: 24,
 	},
 
 	header: {

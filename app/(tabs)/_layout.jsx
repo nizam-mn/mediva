@@ -20,8 +20,8 @@ export default function TabLayout() {
 				// ⚪ TAB BAR BACKGROUND
 				tabBarStyle: {
 					backgroundColor: "#fff",
-                    height: 58,
-                    paddingTop: 4
+                    height: 76,
+                    paddingTop: 6,
 				},
 			}}
 		>

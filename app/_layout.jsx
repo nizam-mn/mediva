@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Platform, View } from "react-native";
 import { useEffect, useState } from "react";
 import { db } from "@/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -13,6 +13,16 @@ import { Inter_500Medium } from "@expo-google-fonts/inter/500Medium";
 import { Inter_600SemiBold } from "@expo-google-fonts/inter/600SemiBold";
 import { Inter_700Bold } from "@expo-google-fonts/inter/700Bold";
 import { CustomHeader } from "@/components/headers";
+import * as Notifications from "expo-notifications";
+import Groq from "groq-sdk";
+
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: true,
+		shouldSetBadge: false,
+	}),
+});
 
 function RootLayoutNav() {
 	const { user, loading } = useAuth();
@@ -62,22 +72,6 @@ function RootLayoutNav() {
 				<Stack.Protected guard={!!user && profileCompleted === false}>
 					<Stack.Screen name="completeProfile" />
 				</Stack.Protected>
-				{/* <Stack.Protected guard={!!user && profileCompleted === true}>
-					<Stack.Screen
-						options={{
-							header: ({ navigation }) => (
-								<CustomHeader
-									title={"Add Records"}
-									onBack={() => router.push("/(tabs)/records")}
-								/>
-							),
-							title: "Add Medical Record",
-							headerShown: true,
-							headerBackTitleVisible: false,
-						}}
-						name="addRecords"
-					/>
-				</Stack.Protected> */}
 
 				{/* FULLY AUTHENTICATED */}
 				<Stack.Protected guard={!!user && profileCompleted === true}>
@@ -93,7 +87,29 @@ function RootLayoutNav() {
 export default function RootLayout() {
 	return (
 		<AuthProvider>
-			<RootLayoutNav />
+			<View
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+					backgroundColor: "#0095b6", // optional
+					// backgroundColor: "#f5f5f5", // optional
+				}}
+			>
+				<View
+					style={{
+						flex: 1,
+						width: "100%",
+						maxWidth: Platform.OS === "web" ? 1024 : "100%",
+						height: Platform.OS === "web" ? "90%" : "100%",
+						maxHeight: Platform.OS === "web" ? "90%" : "100%",
+						borderRadius: 20,
+						overflow: "hidden",
+					}}
+				>
+					<RootLayoutNav />
+				</View>
+			</View>
 		</AuthProvider>
 	);
 }
