@@ -7,11 +7,14 @@ import { ActivityIndicator, Platform, View } from "react-native";
 import { useEffect, useState } from "react";
 import { db } from "@/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
+
 import { useFonts } from "@expo-google-fonts/inter/useFonts";
 import { Inter_400Regular } from "@expo-google-fonts/inter/400Regular";
 import { Inter_500Medium } from "@expo-google-fonts/inter/500Medium";
 import { Inter_600SemiBold } from "@expo-google-fonts/inter/600SemiBold";
 import { Inter_700Bold } from "@expo-google-fonts/inter/700Bold";
+
+import { useFonts as useFontReadexPro, ReadexPro_400Regular, ReadexPro_500Medium, ReadexPro_600SemiBold, ReadexPro_700Bold } from '@expo-google-fonts/readex-pro';
 import { CustomHeader } from "@/components/headers";
 import * as Notifications from "expo-notifications";
 import Groq from "groq-sdk";
@@ -33,6 +36,13 @@ function RootLayoutNav() {
 		Inter_500Medium,
 		Inter_600SemiBold,
 		Inter_700Bold,
+	});
+	
+    const [readexProFontsLoaded] = useFontReadexPro({
+		ReadexPro_400Regular,
+		ReadexPro_500Medium,
+		ReadexPro_600SemiBold,
+		ReadexPro_700Bold,
 	});
 
 	// 🔹 Listen to user profile
@@ -61,11 +71,11 @@ function RootLayoutNav() {
 
 	return (
 		<>
-			<Stack screenOptions={{ headerShown: false }}>
+			<Stack screenOptions={{ headerShown: false, animation: "fade_from_bottom" }}>
 				{/* AUTH SCREENS */}
 				<Stack.Protected guard={!user}>
-					<Stack.Screen name="login" />
-					<Stack.Screen name="register" />
+					<Stack.Screen name="(auth)/login" />
+					<Stack.Screen name="(auth)/register" />
 				</Stack.Protected>
 
 				{/* LOGGED IN BUT PROFILE INCOMPLETE */}

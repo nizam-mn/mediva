@@ -1,9 +1,9 @@
 // components/CustomHeader.js
+import ReadexProText from "@/components/ReadexProText";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import InterText from "@/components/InterText"
 
 export function CustomHeader({ title, onBack }) {
 	const { top } = useSafeAreaInsets();
@@ -17,7 +17,9 @@ export function CustomHeader({ title, onBack }) {
 				<Feather name="arrow-left" size={26} color="#000" />
 			</TouchableOpacity>
 
-			<InterText weight="semibold" style={styles.title}>{title}</InterText>
+			<ReadexProText weight="medium" style={styles.title}>
+				{title}
+			</ReadexProText>
 
 			<View style={{ width: 24 }} />
 		</View>

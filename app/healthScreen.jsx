@@ -1,61 +1,10 @@
-# Welcome to your Expo app 👋
-
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-
-
 import {
 	View,
 	StyleSheet,
 	FlatList,
 	ActivityIndicator,
 	TouchableOpacity,
+	Alert,
 } from "react-native";
 import ReadexProText from "@/components/ReadexProText";
 import React, { useState, useEffect } from "react";
@@ -178,6 +127,8 @@ export default function HealthScreen() {
 	const { user } = useAuth();
 
 	const [loading, setLoading] = useState(false);
+	const [predicting, setPredicting] = useState(false);
+	const [predictionResult, setPredictionResult] = useState(null);
 
 	/* ---------------- SAMPLE DATA ---------------- */
 
@@ -286,6 +237,48 @@ export default function HealthScreen() {
 		return Math.min(score, 100);
 	};
 
+	/* ---------------- AI PREDICTION ---------------- */
+
+	const handlePredict = async () => {
+		if (!metrics || metrics.length === 0) {
+			Alert.alert("Error", "No health metrics available to predict.");
+			return;
+		}
+
+		try {
+			setPredicting(true);
+
+			// Map metrics array directly, sending all available data to Gemini
+			const mapped = {};
+			metrics.forEach((m) => {
+				mapped[m.name] = String(m.value);
+			});
+
+			const API_URL = "http://10.203.174.221:8000/api/predict/health"; // For Android Emulator. Use localhost or your LAN IP if otherwise.
+			
+			const response = await fetch(API_URL, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(mapped),
+			});
+
+			if (!response.ok) {
+				const errorText = await response.text();
+				throw new Error(errorText);
+			}
+
+			const data = await response.json();
+			setPredictionResult(data);
+		} catch (error) {
+			console.error(error);
+			Alert.alert("Prediction Failed", error.message);
+		} finally {
+			setPredicting(false);
+		}
+	};
+
 	/* ---------------- UI ---------------- */
 
 	if (loading) {
@@ -329,7 +322,52 @@ export default function HealthScreen() {
 								<ReadexProText style={styles.scoreSub}>
 									Based on latest metrics
 								</ReadexProText>
+								
+								<TouchableOpacity 
+									style={styles.predictBtn} 
+									onPress={handlePredict}
+									disabled={predicting}
+								>
+									{predicting ? (
+										<ActivityIndicator color="#0095b6" size="small" />
+									) : (
+										<ReadexProText style={styles.predictBtnText}>Generate AI Analysis</ReadexProText>
+									)}
+								</TouchableOpacity>
 							</View>
+
+							{/* AI PREDICTION RESULT */}
+							{predictionResult && (
+								<View style={styles.predictionCard}>
+									<ReadexProText weight="medium" style={styles.predictionSectionTitle}>
+										AI Health Analysis
+									</ReadexProText>
+
+									{/* <ReadexProText style={styles.predictionLabel}>AI Score:</ReadexProText>
+									<ReadexProText style={styles.predictionValue}>{predictionResult.health_score}/100</ReadexProText> */}
+
+									<ReadexProText style={[styles.predictionLabel, {marginTop: 10}]}>Insights:</ReadexProText>
+									<ReadexProText style={{fontSize: 14, color: "#166534", marginTop: 4}}>{predictionResult.insights}</ReadexProText>
+
+									{predictionResult.risk_factors && predictionResult.risk_factors.length > 0 && (
+										<>
+											<ReadexProText style={[styles.predictionLabel, {marginTop: 10}]}>Risk Factors:</ReadexProText>
+											{predictionResult.risk_factors.map((risk, idx) => (
+												<ReadexProText key={idx} style={{fontSize: 14, color: "#166534", marginTop: 2, paddingLeft: 4}}>• {risk}</ReadexProText>
+											))}
+										</>
+									)}
+
+									{predictionResult.recommendations && predictionResult.recommendations.length > 0 && (
+										<>
+											<ReadexProText style={[styles.predictionLabel, {marginTop: 10}]}>Recommendations:</ReadexProText>
+											{predictionResult.recommendations.map((rec, idx) => (
+												<ReadexProText key={idx} style={{fontSize: 14, color: "#166534", marginTop: 2, paddingLeft: 4}}>• {rec}</ReadexProText>
+											))}
+										</>
+									)}
+								</View>
+							)}
 
 							<Section title="Vitals" data={vitals} />
 							<Section title="Body" data={body} />
@@ -439,6 +477,46 @@ const styles = StyleSheet.create({
 
 	scoreSub: {
 		color: "#e0f7fa",
+	},
+
+	predictBtn: {
+		backgroundColor: "#fff",
+		paddingVertical: 10,
+		paddingHorizontal: 20,
+		borderRadius: 24,
+		marginTop: 20,
+		alignSelf: "flex-start",
+	},
+
+	predictBtnText: {
+		color: "#0095b6",
+		fontWeight: "600",
+		fontSize: 14,
+	},
+
+	predictionCard: {
+		backgroundColor: "#f0fdf4",
+		padding: 20,
+		borderRadius: 16,
+		marginBottom: 20,
+		borderColor: "#bbf7d0",
+		borderWidth: 1,
+	},
+	predictionSectionTitle: {
+		fontSize: 18,
+		marginBottom: 10,
+		color: "#166534",
+	},
+	predictionLabel: {
+		fontSize: 15,
+		color: "#14532d",
+		fontWeight: "bold",
+	},
+	predictionValue: {
+		fontSize: 18,
+		color: "#166534",
+		fontWeight: "500",
+		marginTop: 2,
 	},
 
 	sectionTitle: {

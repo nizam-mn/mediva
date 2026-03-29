@@ -1,26 +1,25 @@
-import { useState, useRef } from "react";
-import {
-	View,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	StyleSheet,
-	FlatList,
-	KeyboardAvoidingView,
-	Platform,
-	ActivityIndicator,
-} from "react-native";
-import Groq from "groq-sdk";
+import { CustomHeader } from "@/components/headers";
+import ReadexProText from "@/components/ReadexProText";
 import { Feather } from "@expo/vector-icons";
 import { router, Stack } from "expo-router";
-import { CustomHeader } from "@/components/headers";
-import InterText from "@/components/InterText";
+import Groq from "groq-sdk";
+import { useRef, useState } from "react";
+import {
+    ActivityIndicator,
+    FlatList,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 /* ---------------- CONFIG ---------------- */
 
 const groq = new Groq({
 	apiKey: process.env.EXPO_PUBLIC_GROQ_API,
-    dangerouslyAllowBrowser: true 
+	dangerouslyAllowBrowser: true,
 });
 
 /* ---------------- SYSTEM PROMPT ---------------- */
@@ -73,7 +72,6 @@ OUTPUT FORMAT:
 - No emojis.
 - No role-play.
 `;
-
 
 /* ---------------- SCREEN ---------------- */
 
@@ -138,8 +136,7 @@ export default function MedicalChatbot() {
 				{
 					id: Date.now().toString() + "-error",
 					role: "assistant",
-					content:
-						"⚠️ Sorry, I couldn’t respond right now. Please try again.",
+					content: "⚠️ Sorry, I couldn’t respond right now. Please try again.",
 				},
 			]);
 		} finally {
@@ -154,20 +151,17 @@ export default function MedicalChatbot() {
 		const isUser = item.role === "user";
 
 		return (
-			<View
-				style={[
-					styles.message,
-					isUser ? styles.userMsg : styles.aiMsg,
-				]}
-			>
-				<InterText style={[styles.msgText, isUser && {color: "#ffffff"}]}>{item.content}</InterText>
+			<View style={[styles.message, isUser ? styles.userMsg : styles.aiMsg]}>
+				<ReadexProText style={[styles.msgText, isUser && { color: "#ffffff" }]}>
+					{item.content}
+				</ReadexProText>
 			</View>
 		);
 	};
 
 	return (
-        <>
-        <Stack.Screen
+		<>
+			<Stack.Screen
 				options={{
 					headerShown: true,
 					header: () => (
@@ -184,39 +178,39 @@ export default function MedicalChatbot() {
 					),
 				}}
 			/>
-        
-		<KeyboardAvoidingView
-			style={styles.container}
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-		>
-			<FlatList
-				ref={listRef}
-				data={messages}
-				keyExtractor={(item) => item.id}
-				renderItem={renderItem}
-				contentContainerStyle={styles.chat}
-			/>
 
-			<View style={styles.inputBar}>
-				<TextInput
-					style={styles.input}
-					placeholder="Ask about symptoms, health, medicine..."
-					value={input}
-					onChangeText={setInput}
-                    placeholderTextColor={"#9e9e9e"}
-					multiline
+			<KeyboardAvoidingView
+				style={styles.container}
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+			>
+				<FlatList
+					ref={listRef}
+					data={messages}
+					keyExtractor={(item) => item.id}
+					renderItem={renderItem}
+					contentContainerStyle={styles.chat}
 				/>
 
-				<TouchableOpacity style={styles.sendBtn} onPress={sendMessage}>
-					{loading ? (
-						<ActivityIndicator color="#fff" />
-					) : (
-						<Feather name="send" size={20} color="#fff" />
-					)}
-				</TouchableOpacity>
-			</View>
-		</KeyboardAvoidingView>
-        </>
+				<View style={styles.inputBar}>
+					<TextInput
+						style={styles.input}
+						placeholder="Ask about symptoms, health, medicine..."
+						value={input}
+						onChangeText={setInput}
+						placeholderTextColor={"#9e9e9e"}
+						multiline
+					/>
+
+					<TouchableOpacity style={styles.sendBtn} onPress={sendMessage}>
+						{loading ? (
+							<ActivityIndicator color="#fff" />
+						) : (
+							<Feather name="send" size={20} color="#fff" />
+						)}
+					</TouchableOpacity>
+				</View>
+			</KeyboardAvoidingView>
+		</>
 	);
 }
 
@@ -244,7 +238,6 @@ const styles = StyleSheet.create({
 	aiMsg: {
 		alignSelf: "flex-start",
 		backgroundColor: "#f1f1f1",
-        
 	},
 	msgText: {
 		color: "#000",

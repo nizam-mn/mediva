@@ -10,7 +10,7 @@ export default function TabLayout() {
 			screenOptions={{
 				
 				tabBarLabelStyle: {
-					fontFamily: "Inter_400Regular",
+					fontFamily: "ReadexPro_400Regular",
 				},
 
 				// 🔴 ICON COLORS

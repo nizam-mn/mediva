@@ -1,27 +1,25 @@
-import {
-	Alert,
-	KeyboardAvoidingView,
-	Platform,
-	ScrollView,
-	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-} from "react-native";
-import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, router } from "expo-router";
+import DropDown from "@/components/DropDown";
 import { CustomHeader } from "@/components/headers";
-import InterText from "@/components/InterText";
+import ReadexProText from "@/components/ReadexProText";
+import { useAuth } from "@/contexts/AuthContext";
+import { db } from "@/firebase";
 import { Feather } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as Notifications from "expo-notifications";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import DropDown from "@/components/DropDown";
-import { db } from "@/firebase";
-import { useAuth } from "@/contexts/AuthContext";
+import { Stack, router } from "expo-router";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useState } from "react";
+import {
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 export default function addReminders() {
 	const [openDropDown, setOpenDropDown] = useState(null);
@@ -263,9 +261,9 @@ export default function addReminders() {
 						<View style={styles.content}>
 							<View style={styles.inputsCont}>
 								<View>
-									<InterText weight="medium" style={styles.inputLabel}>
+									<ReadexProText weight="medium" style={styles.inputLabel}>
 										Medicine Name
-									</InterText>
+									</ReadexProText>
 									<TextInput
 										style={styles.inputBox}
 										placeholderTextColor={"#a7a7a7"}
@@ -276,13 +274,13 @@ export default function addReminders() {
 									/>
 								</View>
 								<View style={{ position: "relative" }}>
-									<InterText weight="medium" style={styles.inputLabel}>
+									<ReadexProText weight="medium" style={styles.inputLabel}>
 										Medicine Form
-									</InterText>
+									</ReadexProText>
 									<View style={styles.dropDown}>
-										<InterText style={{ fontSize: 18 }}>
+										<ReadexProText style={{ fontSize: 18 }}>
 											{FORM_LABEL[medicine.form]}
-										</InterText>
+										</ReadexProText>
 										<TouchableOpacity
 											onPress={() =>
 												setOpenDropDown((prev) => (prev === 1 ? null : 1))
@@ -316,12 +314,14 @@ export default function addReminders() {
 								</View>
 
 								<View>
-									<InterText weight="medium" style={styles.inputLabel}>
+									<ReadexProText weight="medium" style={styles.inputLabel}>
 										Schedule
-									</InterText>
+									</ReadexProText>
 									<View style={styles.sheduleItemCont}>
 										<View style={styles.sheduleItem}>
-											<InterText style={{ fontSize: 18 }}>Dosage</InterText>
+											<ReadexProText style={{ fontSize: 18 }}>
+												Dosage
+											</ReadexProText>
 											<View
 												style={{
 													flexDirection: "row",
@@ -346,7 +346,7 @@ export default function addReminders() {
 													<Feather name="minus" size={20} color={"#fff"} />
 												</TouchableOpacity>
 
-												<InterText
+												<ReadexProText
 													style={{
 														fontSize: 18,
 														width: 24,
@@ -354,7 +354,7 @@ export default function addReminders() {
 													}}
 												>
 													{medicine.dose}
-												</InterText>
+												</ReadexProText>
 
 												<TouchableOpacity
 													style={{
@@ -376,9 +376,9 @@ export default function addReminders() {
 
 										<View>
 											<View style={styles.sheduleItem}>
-												<InterText style={{ fontSize: 18 }}>
+												<ReadexProText style={{ fontSize: 18 }}>
 													Frequency
-												</InterText>
+												</ReadexProText>
 												<View
 													style={{
 														flexDirection: "row",
@@ -399,11 +399,11 @@ export default function addReminders() {
 															setOpenDropDown((prev) => (prev === 2 ? null : 2))
 														}
 													>
-														<InterText
+														<ReadexProText
 															style={{ fontSize: 18, color: "#007d98" }}
 														>
 															{FREQ_LABEL[medicine.frequency]}
-														</InterText>
+														</ReadexProText>
 														<Feather
 															name={
 																openDropDown === 2
@@ -436,7 +436,9 @@ export default function addReminders() {
 
 										<View>
 											<View style={styles.sheduleItem}>
-												<InterText style={{ fontSize: 18 }}>Time</InterText>
+												<ReadexProText style={{ fontSize: 18 }}>
+													Time
+												</ReadexProText>
 												<View
 													style={{
 														flexDirection: "row",
@@ -457,11 +459,11 @@ export default function addReminders() {
 															setOpenDropDown((prev) => (prev === 3 ? null : 3))
 														}
 													>
-														<InterText
+														<ReadexProText
 															style={{ fontSize: 18, color: "#007d98" }}
 														>
 															{timeText}
-														</InterText>
+														</ReadexProText>
 														<Feather name="clock" size={20} color={"#0095b6"} />
 													</TouchableOpacity>
 												</View>
@@ -486,7 +488,9 @@ export default function addReminders() {
 
 										<View>
 											<View style={styles.sheduleItem}>
-												<InterText style={{ fontSize: 18 }}>Duration</InterText>
+												<ReadexProText style={{ fontSize: 18 }}>
+													Duration
+												</ReadexProText>
 												<View
 													style={{
 														flexDirection: "row",
@@ -507,13 +511,13 @@ export default function addReminders() {
 															setOpenDropDown((prev) => (prev === 4 ? null : 4))
 														}
 													>
-														<InterText
+														<ReadexProText
 															style={{ fontSize: 18, color: "#007d98" }}
 														>
 															{medicine.durationDays === 30
 																? "1 month"
 																: `${medicine.durationDays} days`}
-														</InterText>
+														</ReadexProText>
 														<Feather
 															name={
 																openDropDown === 4
@@ -546,9 +550,9 @@ export default function addReminders() {
 
 										<View>
 											<View style={styles.sheduleItem}>
-												<InterText style={{ fontSize: 18 }}>
+												<ReadexProText style={{ fontSize: 18 }}>
 													Intake Method
-												</InterText>
+												</ReadexProText>
 												<View
 													style={{
 														flexDirection: "row",
@@ -569,11 +573,11 @@ export default function addReminders() {
 															setOpenDropDown((prev) => (prev === 5 ? null : 5))
 														}
 													>
-														<InterText
+														<ReadexProText
 															style={{ fontSize: 18, color: "#007d98" }}
 														>
 															{INTAKE_LABEL[medicine.intake]}
-														</InterText>
+														</ReadexProText>
 														<Feather
 															name={
 																openDropDown === 5
@@ -611,12 +615,12 @@ export default function addReminders() {
 									onPress={handleSaveReminder}
 									disabled={loading}
 								>
-									<InterText
+									<ReadexProText
 										weight="medium"
 										style={{ fontSize: 20, color: "#fff", textAlign: "center" }}
 									>
 										{loading ? "Saving..." : "Save"}
-									</InterText>
+									</ReadexProText>
 								</TouchableOpacity>
 							</View>
 						</View>

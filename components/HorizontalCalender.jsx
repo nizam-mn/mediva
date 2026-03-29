@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 	View,
 } from "react-native";
+import ReadexProText from "@/components/ReadexProText";
 
 export default function HorizontalCalendar({
 	currentMonth,
@@ -90,12 +91,12 @@ export default function HorizontalCalendar({
 							onPress={() => onSelectDate(item)}
 							style={[styles.dayItem]}
 						>
-							<Text
+							<ReadexProText
 								style={[styles.dayText, isSelected && { color: "#0095b6" }]}
 							>
 								{item.toLocaleDateString("en-US", { weekday: "short" })}
-							</Text>
-							<Text
+							</ReadexProText>
+							<ReadexProText
 								style={[
 									styles.dateText,
 									isSelected && styles.daySelected,
@@ -103,7 +104,7 @@ export default function HorizontalCalendar({
 								]}
 							>
 								{item.getDate()}
-							</Text>
+							</ReadexProText>
 						</TouchableOpacity>
 					);
 				}}
@@ -158,6 +159,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1.5,
 		borderColor: "#fff",
 		width: 40,
+		height: 40,
 		textAlign: "center",
 	},
 });

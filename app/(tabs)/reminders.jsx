@@ -1,30 +1,30 @@
+import DropDown from "@/components/DropDown";
+import HorizontalCalendar from "@/components/HorizontalCalender";
+import ReadexProText from "@/components/ReadexProText";
+import { useAuth } from "@/contexts/AuthContext";
+import { db } from "@/firebase";
+import { Feather } from "@expo/vector-icons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
+import { router, useFocusEffect } from "expo-router";
+import {
+    collection,
+    deleteDoc,
+    doc,
+    getDocs,
+    updateDoc,
+} from "firebase/firestore";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-	View,
-	Text,
-	FlatList,
-	StyleSheet,
-	TouchableOpacity,
-	Alert,
-	Platform,
+    Alert,
+    FlatList,
+    Platform,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Feather } from "@expo/vector-icons";
-import { router, useFocusEffect } from "expo-router";
-import * as Notifications from "expo-notifications";
-import InterText from "@/components/InterText";
-import HorizontalCalendar from "@/components/HorizontalCalender";
-import DropDown from "@/components/DropDown";
-import { db } from "@/firebase";
-import {
-	collection,
-	deleteDoc,
-	doc,
-	getDocs,
-	updateDoc,
-} from "firebase/firestore";
-import { useAuth } from "@/contexts/AuthContext";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
@@ -499,7 +499,7 @@ export default function Reminders() {
 		const isPast = time <= new Date();
 		const status = getDoseStatus(item, item.occurrenceTime);
 
-		console.log(item);
+		// console.log(item);
 		return (
 			<TouchableOpacity
 				activeOpacity={0.9}
@@ -516,11 +516,11 @@ export default function Reminders() {
 					</View>
 
 					<View style={{ flex: 1 }}>
-						<InterText weight="semibold" style={styles.name}>
+						<ReadexProText weight="medium" style={styles.name}>
 							{item.name}
-						</InterText>
+						</ReadexProText>
 
-						<InterText style={styles.secondary}>
+						<ReadexProText style={styles.secondary}>
 							{/* {FREQ_LABEL[item.frequency]} */}
 							{item.dose} {FORM_LABEL[item.form]} • {INTAKE_LABEL[item.intake]}{" "}
 							• {/* {item.durationDays} days */}
@@ -531,7 +531,7 @@ export default function Reminders() {
 									hour12: true,
 								})
 								.toUpperCase()}
-						</InterText>
+						</ReadexProText>
 					</View>
 
 					<TouchableOpacity
@@ -591,12 +591,12 @@ export default function Reminders() {
 					}}
 					onPress={() => setShowMonthDropDown((prev) => !prev)}
 				>
-					<InterText weight="semibold" style={{ fontSize: 18 }}>
+					<ReadexProText weight="medium" style={{ fontSize: 18 }}>
 						{currentMonth.toLocaleDateString("en-US", {
 							month: "long",
 							year: "numeric",
 						})}
-					</InterText>
+					</ReadexProText>
 					<Feather
 						name={showMonthDropDown ? "chevron-up" : "chevron-down"}
 						size={22}

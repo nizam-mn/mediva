@@ -1,20 +1,23 @@
-import InterText from "@/components/InterText";
+import drMedu from "@/assets/images/drMedu.png";
+import ReadexProText from "@/components/ReadexProText";
+import TodayReminders from "@/components/TodayReminders";
 import { useAuth } from "@/contexts/AuthContext";
-import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
+import { Feather, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Image } from "expo-image";
-import drMedu from "@/assets/images/drMedu.png"
+
+// const groq = new Groq({ apiKey: process.env.EXPO_PUBLIC_GROQ_API, });
 
 export default function HomeScreen() {
 	const { profile, logout } = useAuth();
 
 	const handleLogout = async () => {
 		Alert.alert("Logout", "Are you sure you want to logout?", [
-			{ InterText: "Cancel", style: "cancel" },
+			{ ReadexProText: "Cancel", style: "cancel" },
 			{
-				InterText: "Logout",
+				ReadexProText: "Logout",
 				style: "destructive",
 				onPress: async () => {
 					try {
@@ -32,9 +35,10 @@ export default function HomeScreen() {
 		<View style={styles.container}>
 			<View style={styles.card}>
 				<SafeAreaView>
-					<InterText weight="semibold" style={styles.title}>
-						{profile?.fullName}
-					</InterText>
+					<ReadexProText weight="medium" style={styles.title}>
+						{/* {profile?.fullName} */}
+						Mediva
+					</ReadexProText>
 				</SafeAreaView>
 			</View>
 			<View style={styles.featureBtn}>
@@ -43,10 +47,14 @@ export default function HomeScreen() {
 						onPress={() => router.push("/prescriptionAnalyzer")}
 						style={styles.ftrBtn}
 					>
-						<View style={styles.ftrBtnIcon} >
-							<MaterialIcons name="document-scanner" size={36} color="#0095b6" />
+						<View style={styles.ftrBtnIcon}>
+							<MaterialIcons
+								name="document-scanner"
+								size={36}
+								color="#0095b6"
+							/>
 						</View>
-						<InterText>Analyzer</InterText>
+						<ReadexProText>Analyzer</ReadexProText>
 					</TouchableOpacity>
 				</View>
 				<View>
@@ -54,14 +62,26 @@ export default function HomeScreen() {
 						onPress={() => router.push("/medicalChatbot")}
 						style={styles.ftrBtn}
 					>
-						<View style={styles.ftrBtnIcon} >
+						<View style={styles.ftrBtnIcon}>
 							{/* <FontAwesome6 name="user-doctor" size={36} color="#0095b6" /> */}
-                            <Image source={drMedu} style={{height: 44, width: 44}} />
+							<Image source={drMedu} style={{ height: 44, width: 44 }} />
 						</View>
-						<InterText>Dr. Medu</InterText>
+						<ReadexProText>Dr. Medu</ReadexProText>
+					</TouchableOpacity>
+				</View>
+				<View>
+					<TouchableOpacity
+						onPress={() => router.push("/healthScreen")}
+						style={styles.ftrBtn}
+					>
+						<View style={styles.ftrBtnIcon}>
+							<FontAwesome5 name="heartbeat" size={38} color="#0095b6" />
+						</View>
+						<ReadexProText>My Health</ReadexProText>
 					</TouchableOpacity>
 				</View>
 			</View>
+            <TodayReminders/>
 		</View>
 	);
 }
@@ -72,18 +92,20 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 	},
 	card: {
-		height: 240,
-		backgroundColor: "#0095b6",
-		borderBottomLeftRadius: 42,
-		borderBottomRightRadius: 42,
-		padding: 24,
-		gap: 20,
+		// height: 240,
+		backgroundColor: "#76e6ff68",
+		borderBottomLeftRadius: 32,
+		borderBottomRightRadius: 32,
+		paddingTop: 24,
+		paddingBottom: 8,
+		paddingHorizontal: 24,
+		// gap: 20,
 		flexDirection: "row",
 		alignItems: "center",
 	},
 	title: {
-		fontSize: 28,
-		color: "#ffffff",
+		fontSize: 34,
+		color: "#0095b6",
 	},
 	infoRow: {
 		gap: 4,
@@ -112,26 +134,26 @@ const styles = StyleSheet.create({
 
 	featureBtn: {
 		flexDirection: "row",
-        paddingTop: 60,
-        paddingHorizontal: 24,
-        gap: 20
+		paddingTop: 60,
+		paddingHorizontal: 24,
+		gap: 20,
 	},
 
-    ftrBtn: {
-        // borderWidth: .7,
-        flexDirection: "column",
-        alignItems: "center"
-    },
+	ftrBtn: {
+		// borderWidth: .7,
+		flexDirection: "column",
+		alignItems: "center",
+	},
 
-    ftrBtnIcon: {
-        borderWidth: 0.8, 
-        height: 70,
-        width: 70,
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: 14,
-        borderColor: "#e7e7e7",
-        marginBottom: 5
-    }
+	ftrBtnIcon: {
+		borderWidth: 0.8,
+		height: 70,
+		width: 70,
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: 14,
+		borderColor: "#e7e7e7",
+		marginBottom: 5,
+	},
 });

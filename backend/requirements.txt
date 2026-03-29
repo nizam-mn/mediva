@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+python-multipart
+paddleocr
+opencv-python
+pymupdf
+numpy
+groq
+python-dotenv
+imagekitio
+sqlalchemy
+psycopg2-binary
+google-generativeai

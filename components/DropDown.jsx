@@ -1,5 +1,10 @@
-import { FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import InterText from "@/components/InterText";
+import ReadexProText from "@/components/ReadexProText";
+import {
+    FlatList,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+} from "react-native";
 
 export default function DropDown({
 	items,
@@ -21,8 +26,8 @@ export default function DropDown({
 					offset: itemHeight * index,
 					index,
 				})}
-                // style={{maxHeight: 286}}
-                contentContainerStyle={{gap: 2.5,}}
+				// style={{maxHeight: 286}}
+				contentContainerStyle={{ gap: 2.5 }}
 				showsVerticalScrollIndicator={false}
 				keyboardShouldPersistTaps="handled"
 				renderItem={({ item }) => {
@@ -31,9 +36,13 @@ export default function DropDown({
 					return (
 						<TouchableOpacity
 							onPress={() => onSelect(item.value ?? item)}
-							style={[styles.optionItem, ]}
+							style={[styles.optionItem]}
 						>
-							<InterText style={[styles.option, active && styles.activeItem]}>{item.label ?? item}</InterText>
+							<ReadexProText
+								style={[styles.option, active && styles.activeItem]}
+							>
+								{item.label ?? item}
+							</ReadexProText>
 						</TouchableOpacity>
 					);
 				}}
@@ -52,14 +61,14 @@ const styles = StyleSheet.create({
 		gap: 2.5,
 	},
 
-    option: {
+	option: {
 		backgroundColor: "#c9c9c954",
 		fontSize: 16,
 		padding: 16,
 	},
 
-    activeItem: {
-        backgroundColor: "#0095b6",
-        color: "#fff"
-    }
+	activeItem: {
+		backgroundColor: "#0095b6",
+		color: "#fff",
+	},
 });

@@ -1,11 +1,15 @@
+import ReadexProText from "@/components/ReadexProText";
 import { useAuth } from "@/contexts/AuthContext";
-import { db } from "@/firebase";
 import Feather from "@expo/vector-icons/Feather";
 import { Image } from "expo-image";
-import { doc, getDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import InterText from "@/components/InterText";
+import { useState } from "react";
+import {
+    Alert,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 export default function Profile() {
 	const { user, logout, profile } = useAuth();
@@ -60,7 +64,9 @@ export default function Profile() {
 						transition={500}
 					/>
 				</View>
-				<InterText weight="semibold" style={styles.name}>{profile?.fullName || "Mediva User"}</InterText>
+				<ReadexProText weight="semibold" style={styles.name}>
+					{profile?.fullName || "Mediva User"}
+				</ReadexProText>
 				{/* <Text style={styles.email}>{user?.email}</Text> */}
 			</View>
 
@@ -93,7 +99,7 @@ export default function Profile() {
 			<View style={styles.actions}>
 				<TouchableOpacity style={styles.actionBtn}>
 					<Feather name="edit-3" size={18} color="#0095b6" />
-					<InterText style={styles.actionText}>Edit Profile</InterText>
+					<ReadexProText style={styles.actionText}>Edit Profile</ReadexProText>
 				</TouchableOpacity>
 
 				<TouchableOpacity
@@ -101,7 +107,9 @@ export default function Profile() {
 					onPress={handleLogout}
 				>
 					<Feather name="log-out" size={18} color="#FF3B30" />
-					<InterText style={[styles.actionText, { color: "#FF3B30" }]}>Logout</InterText>
+					<ReadexProText style={[styles.actionText, { color: "#FF3B30" }]}>
+						Logout
+					</ReadexProText>
 				</TouchableOpacity>
 			</View>
 		</ScrollView>
@@ -112,8 +120,8 @@ export default function Profile() {
 function ProfileRow({ label, value }) {
 	return (
 		<View style={styles.row}>
-			<InterText style={styles.rowLabel}>{label}</InterText>
-			<InterText style={styles.rowValue}>{value || "-"}</InterText>
+			<ReadexProText style={styles.rowLabel}>{label}</ReadexProText>
+			<ReadexProText style={styles.rowValue}>{value || "-"}</ReadexProText>
 		</View>
 	);
 }
@@ -121,7 +129,7 @@ function ProfileRow({ label, value }) {
 /* ---------- Styles ---------- */
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
+		// flex: 1,
 		backgroundColor: "#ffffff",
 		paddingHorizontal: 20,
 		paddingVertical: 24,
@@ -190,7 +198,7 @@ const styles = StyleSheet.create({
 
 	rowValue: {
 		fontSize: 16,
-		color: "#111",
+		// color: "#111",
 		fontWeight: "500",
 	},
 
