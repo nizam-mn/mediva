@@ -1,540 +1,240 @@
-# Welcome to your Expo app 👋
+# 🏥 Mediva — AI-Powered Personal Health Assistant
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Mediva is an intelligent personal health platform that helps users **manage medical data, analyze prescriptions, and gain AI-driven health insights** — all in one place.
 
-## Get started
+Built with a modern stack combining **React Native, Firebase, and AI services**, Mediva focuses on making healthcare data **accessible, understandable, and actionable**.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 🚀 Core Features
 
-2. Start the app
+### 📄 AI Prescription Analyzer
 
-   ```bash
-   npx expo start
-   ```
+* Upload prescriptions (including handwritten)
+* AI-powered extraction using **Groq API**
+* Detect medicines, dosage, and instructions
+* Structured medical data output
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### 🧠 Health Insights & Risk Prediction
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+* Personalized health insights dashboard
+* Risk prediction based on:
 
-## Get a fresh project
+  * Vitals
+  * Lab reports
+  * Medical history
+* Powered by **Gemini 2.5 Flash**
 
-When you're ready, run:
+---
 
-```bash
-npm run reset-project
+### 💬 Medical Chatbot
+
+* AI chatbot for general health queries
+* Context-aware responses
+* Assists users in understanding reports and symptoms
+
+---
+
+### 📂 Medical Document Storage
+
+* Secure upload and storage of:
+
+  * Prescriptions
+  * Lab reports
+  * Medical records
+* Supports PDF, scanned documents, and images
+
+---
+
+### 🧬 Health Profile System
+
+* Store and track:
+
+  * Blood Sugar, BP, Cholesterol
+  * BMI, Heart Rate, SpO₂
+  * HbA1c, Creatinine, Vitamins
+* Allergies & chronic conditions tracking
+* Health score system
+
+---
+
+### ⏰ Smart Reminder System
+
+* Medicine reminders (local + cloud sync)
+* Daily tracking
+* (Upcoming) Alarm-style intelligent reminders
+
+---
+
+## 🏗️ Tech Stack
+
+### 📱 Frontend
+
+* React Native (Expo)
+* Firebase Authentication
+* AsyncStorage
+
+### ⚙️ Backend (AI Engine)
+
+* Python (FastAPI via Uvicorn)
+* Groq API (Prescription AI)
+* Gemini 2.5 Flash (Health insights & prediction)
+
+### 🗄️ Database & Storage
+
+* Firebase Firestore
+* Firebase Storage
+
+---
+
+## 📁 Project Structure
+
+```
+mediva/
+ ├── frontend/              # React Native app
+ ├── backend/               # Python AI backend
+ │    ├── app/
+ │    │    ├── main.py      # FastAPI entry point
+ │    ├── venv/             # ❌ ignored
+ │    ├── .env              # ❌ ignored
+ │    ├── .env.example      # ✅ template
+ │    ├── requirements.txt
+ ├── .gitignore
+ ├── README.md
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## ⚙️ Setup Instructions
 
-To learn more about developing your project with Expo, look at the following resources:
+### 1️⃣ Clone the Repository
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+git clone https://github.com/your-username/mediva.git
+cd mediva
+```
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
+### 2️⃣ Frontend Setup
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+cd frontend
+npm install
+npx expo start
+```
 
+---
 
-import {
-	View,
-	StyleSheet,
-	FlatList,
-	ActivityIndicator,
-	TouchableOpacity,
-} from "react-native";
-import ReadexProText from "@/components/ReadexProText";
-import React, { useState, useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { router, Stack } from "expo-router";
+### 3️⃣ Backend Setup
 
-import { useAuth } from "@/contexts/AuthContext";
-import { CustomHeader } from "@/components/headers";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { db } from "@/firebase";
-import { Feather } from "@expo/vector-icons";
+```bash
+cd backend
 
-/* ---------------- HEALTH RANGES ---------------- */
+# Create virtual environment
+python -m venv venv
 
-const HEALTH_RANGES = {
-	Hemoglobin: { low: 13, high: 17, unit: "g/dL" },
+# Activate venv
+# Windows:
+venv\Scripts\activate
 
-	"Blood Sugar": { low: 70, high: 140, unit: "mg/dL" },
+# Mac/Linux:
+source venv/bin/activate
 
-	"Blood Pressure": { low: 80, high: 120, unit: "mmHg" },
+# Install dependencies
+pip install -r requirements.txt
+```
 
-	"Total Cholesterol": { low: 125, high: 200, unit: "mg/dL" },
-	LDL: { low: 0, high: 130, unit: "mg/dL" },
-	HDL: { low: 40, high: 100, unit: "mg/dL" },
+---
 
-	Triglycerides: { low: 0, high: 150, unit: "mg/dL" },
+### 4️⃣ Environment Variables
 
-	"Heart Rate": { low: 60, high: 100, unit: "bpm" },
+Create a `.env` file inside `backend/`:
 
-	"Oxygen (SpO₂)": { low: 95, high: 100, unit: "%" },
+```
+GROQ_API_KEY=your_groq_key
+GEMINI_API_KEY=your_gemini_key
+FIREBASE_CONFIG=your_config
+```
 
-	BMI: { low: 18.5, high: 24.9, unit: "" },
+> ⚠️ Never commit `.env` files to GitHub
 
-	Creatinine: { low: 0.7, high: 1.3, unit: "mg/dL" },
+---
 
-	HbA1c: { low: 4, high: 5.7, unit: "%" },
+### 5️⃣ Run Backend Server
 
-	"Uric Acid": { low: 3.5, high: 7.2, unit: "mg/dL" },
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
 
-	"Vitamin D": { low: 20, high: 50, unit: "ng/mL" },
+---
 
-	"Vitamin B12": { low: 200, high: 900, unit: "pg/mL" },
+## 🔐 Security Best Practices
 
-	"TSH (Thyroid)": { low: 0.4, high: 4.0, unit: "mIU/L" },
-};
+* `.env` is excluded via `.gitignore`
+* API keys are never exposed
+* Use `.env.example` for reference
+* Rotate keys if leaked
 
-/* ---------------- HELPERS ---------------- */
+---
 
-const getStatus = (name, value, fallbackStatus) => {
-	const range = HEALTH_RANGES[name];
+## 🧠 AI Capabilities Overview
 
-	// ✅ If no range → use Firebase status
-	if (!range) {
-		return fallbackStatus || "unknown";
-	}
+| Feature                | Technology                     |
+| ---------------------- | ------------------------------ |
+| Prescription Analysis  | Groq API                       |
+| Health Risk Prediction | Gemini 2.5 Flash               |
+| Chatbot                | LLM-based conversational AI    |
+| OCR & Parsing          | Tesseract / OpenCV / PDF tools |
 
-	if (value == null) return fallbackStatus || "unknown";
+---
 
-	if (value < range.low) return "low";
-	if (value > range.high) return "high";
-	return "normal";
-};
+## 🛣️ Roadmap
 
-const getColor = (status) => {
-	if (status === "normal") return "#22c55e";
-	if (status === "high") return "#ef4444";
-	if (status === "low") return "#f59e0b";
-	return "#999";
-};
+* 📊 Advanced health trend visualization
+* 🔔 Smart alarm-based medicine reminders
+* 📷 Real-time prescription scanning
+* ☁️ Backup & multi-device sync improvements
+* 🧾 Auto medical report summarization
 
-/* ---------------- METRIC CARD ---------------- */
+---
 
-const MetricCard = ({ item }) => {
-	const status = getStatus(item.name, item.value, item.status);
-	const color = getColor(status);
+## 🤝 Contributing
 
-	const unit = item.unit || HEALTH_RANGES[item.name]?.unit || "";
+Contributions are welcome!
 
-	return (
-		<View style={styles.card}>
-			<ReadexProText style={styles.name}>{item.name}</ReadexProText>
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
-			<ReadexProText style={[styles.value, { color }]}>
-				{item.value ?? "--"} {unit}
-			</ReadexProText>
+---
 
-			<ReadexProText style={{ color, fontSize: 12 }}>
-				{status?.toUpperCase()}
-			</ReadexProText>
-		</View>
-	);
-};
+## 📄 License
 
-/* ---------------- SECTION ---------------- */
+This project is licensed under the MIT License.
 
-const Section = ({ title, data }) => {
-	if (!data.length) return null;
+---
 
-	return (
-		<View style={{ marginBottom: 20,  }}>
-			<ReadexProText weight="medium" style={styles.sectionTitle}>
-				{title}
-			</ReadexProText>
+## 👨‍💻 Developer
 
-			<FlatList
-				data={data}
-                style={{borderWidth: 1, overflow: "hidden", borderColor: "#dcdcdc", borderRadius: 8}}
-				keyExtractor={(item, i) => item.name + i}
-				renderItem={({ item }) => <MetricCard item={item} />}
-				numColumns={2}
-				scrollEnabled={false}
-			/>
-		</View>
-	);
-};
+**Mohammed Nizam**
+**Habeeb Rahman**
+**Salahudheen**
+**Mohamed Safwan**
 
-/* ---------------- MAIN ---------------- */
 
-export default function HealthScreen() {
-	const { user } = useAuth();
+---
 
-	const [loading, setLoading] = useState(false);
+## 💡 Vision
 
-	/* ---------------- SAMPLE DATA ---------------- */
+Mediva aims to bridge the gap between **raw medical data and meaningful insights**, empowering users to take control of their health using AI.
 
-	//   const [metrics] = useState([
-	//     { name: "Hemoglobin", value: 11.2 },
-	//     { name: "Blood Sugar", value: 145 },
+---
 
-	//     { name: "Blood Pressure (Systolic)", value: 135 },
-	//     { name: "Blood Pressure (Diastolic)", value: 90 },
+## ⭐ Support
 
-	//     { name: "Total Cholesterol", value: 210 },
-	//     { name: "LDL", value: 140 },
-	//     { name: "HDL", value: 38 },
-
-	//     { name: "Triglycerides", value: 180 },
-
-	//     { name: "Heart Rate", value: 78 },
-	//     { name: "Oxygen (SpO₂)", value: 97 },
-
-	//     { name: "BMI", value: 26.4 },
-
-	//     { name: "Creatinine", value: 1.1 },
-	//     { name: "HbA1c", value: 6.2 },
-	//     { name: "Uric Acid", value: 6.5 },
-
-	//     { name: "Vitamin D", value: 18 },
-	//     { name: "Vitamin B12", value: 250 },
-
-	//     { name: "TSH (Thyroid)", value: 3.5 },
-	//   ]);
-
-	const [metrics, setMetrics] = useState([]);
-	const [profile, setProfile] = useState({
-		allergies: [],
-		conditions: [],
-	});
-
-	// fetch health metrics
-	useEffect(() => {
-		if (!user?.uid) return;
-
-		fetchHealthData();
-	}, [user]);
-
-	const fetchHealthData = async () => {
-		try {
-			setLoading(true);
-
-			const snap = await getDocs(
-				collection(db, "users", user.uid, "health_metrics"),
-			);
-
-			const docs = snap.docs.map((d) => ({
-				id: d.id,
-				...d.data(),
-			}));
-
-			/* ---------------- SEPARATE DATA ---------------- */
-
-			const metrics = docs.filter((d) => d.type === "metric");
-			const allergies = docs.filter((d) => d.type === "allergy");
-			const conditions = docs.filter((d) => d.type === "condition");
-
-			/* ---------------- SET STATE ---------------- */
-
-			setMetrics(metrics);
-			setProfile({
-				allergies: allergies.map((a) => a.name),
-				conditions: conditions.map((c) => c.name),
-			});
-		} catch (err) {
-			console.error(err);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	/* ---------------- GROUPING ---------------- */
-
-	const vitals = metrics.filter((m) =>
-		["Heart Rate", "Oxygen (SpO₂)", "Blood Pressure"].includes(m.name),
-	);
-
-	const body = metrics.filter((m) => ["BMI"].includes(m.name));
-
-	const labs = metrics.filter(
-		(m) =>
-			!["Heart Rate", "Oxygen (SpO₂)", "Blood Pressure", "BMI"].includes(
-				m.name,
-			),
-	);
-
-	/* ---------------- HEALTH SCORE ---------------- */
-
-	const getHealthScore = () => {
-		let score = 0;
-
-		metrics.forEach((m) => {
-			const status = getStatus(m.name, m.value, m.status);
-
-			if (status === "normal") score += 8;
-			else if (status === "low") score += 6;
-			else if (status === "high") score += 4;
-		});
-
-		return Math.min(score, 100);
-	};
-
-	/* ---------------- UI ---------------- */
-
-	if (loading) {
-		return (
-			<View style={styles.loader}>
-				<ActivityIndicator size="large" />
-			</View>
-		);
-	}
-
-	return (
-		<>
-			<Stack.Screen
-				options={{
-					headerShown: true,
-					header: () => (
-						<CustomHeader
-							title="My Health"
-							onBack={() => {
-								if (router.canGoBack()) router.back();
-								else router.replace("index");
-							}}
-						/>
-					),
-				}}
-			/>
-
-			<View style={styles.container}>
-				<FlatList
-					data={[{ key: "content" }]}
-					renderItem={() => (
-						<>
-							{/* HEALTH SCORE */}
-							<View style={styles.scoreCard}>
-								<ReadexProText style={styles.scoreTitle}>
-									Health Score
-								</ReadexProText>
-								<ReadexProText weight="medium" style={styles.score}>
-									{getHealthScore()}%
-								</ReadexProText>
-								<ReadexProText style={styles.scoreSub}>
-									Based on latest metrics
-								</ReadexProText>
-							</View>
-
-							<Section title="Vitals" data={vitals} />
-							<Section title="Body" data={body} />
-							<Section title="Lab Metrics" data={labs} />
-
-							{/* PROFILE */}
-							<View style={styles.profileCard}>
-								<ReadexProText weight="medium" style={styles.sectionTitle}>
-									Medical Profile
-								</ReadexProText>
-
-								<ReadexProText style={styles.profileLabel}>
-									Allergies
-								</ReadexProText>
-
-								<View style={styles.pillContainer}>
-									{profile.allergies.length > 0 ? (
-										profile.allergies.map((item, index) => (
-											<View key={index} style={[styles.pill, {backgroundColor: "#FEE2E2"}]}>
-												<ReadexProText style={[styles.pillText, {color: "#991B1B"}]}>
-													{item}
-												</ReadexProText>
-											</View>
-										))
-									) : (
-										<ReadexProText style={styles.profileValue}>
-											None
-										</ReadexProText>
-									)}
-								</View>
-
-								<ReadexProText style={styles.profileLabel}>
-									Chronic Conditions
-								</ReadexProText>
-
-								<View style={styles.pillContainer}>
-									{profile.conditions.length > 0 ? (
-										profile.conditions.map((item, index) => (
-											<View key={index} style={[styles.pill, {backgroundColor: "#ffffa9"}]}>
-												<ReadexProText style={[styles.pillText, {color: "#8B8000"}]}>
-													{item}
-												</ReadexProText>
-											</View>
-										))
-									) : (
-										<ReadexProText style={styles.profileValue}>
-											None
-										</ReadexProText>
-									)}
-								</View>
-							</View>
-						</>
-					)}
-				/>
-
-				{/* ACTION */}
-				<View style={metrics && styles.floatingCont}>
-					<TouchableOpacity
-						onPress={() => router.push("/addHealthData")}
-						style={metrics ? styles.floatingBtn : styles.addBtn}
-					>
-						{metrics ? (
-							<Feather name="edit-3" size={24} color="white" />
-						) : (
-							<ReadexProText style={styles.addReadexProText}>
-								<Feather name="plus" size={24} color="white" /> Add Health Data
-							</ReadexProText>
-						)}
-					</TouchableOpacity>
-				</View>
-			</View>
-		</>
-	);
-}
-
-/* ---------------- STYLES ---------------- */
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		paddingHorizontal: 16,
-		backgroundColor: "#fff",
-	},
-
-	loader: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-
-	scoreCard: {
-		backgroundColor: "#0095b6",
-		padding: 20,
-		borderRadius: 16,
-		marginVertical: 20,
-	},
-
-	scoreTitle: {
-		color: "#fff",
-		fontSize: 16,
-	},
-
-	score: {
-		color: "#fff",
-		fontSize: 36,
-	},
-
-	scoreSub: {
-		color: "#e0f7fa",
-	},
-
-	sectionTitle: {
-		fontSize: 18,
-		marginBottom: 10,
-		color: "#333",
-	},
-
-	card: {
-		flex: 1,
-		backgroundColor: "#fff",
-		padding: 16,
-		// borderRadius: 8,
-		// margin: 6,
-		borderColor: "#dcdcdc",
-		borderWidth: 0,
-	},
-
-	name: {
-		fontSize: 14,
-		color: "#777",
-	},
-
-	value: {
-		fontSize: 20,
-		fontWeight: "600",
-		marginVertical: 3,
-	},
-
-	profileCard: {
-		marginBottom: 30,
-		flex: 1,
-		backgroundColor: "#fff",
-		padding: 16,
-		borderRadius: 8,
-		// margin: 6,
-		borderColor: "#dcdcdc",
-		borderWidth: 1,
-	},
-
-	profileLabel: {
-		fontSize: 14,
-		color: "#777",
-		// marginTop: 10,
-	},
-
-	profileValue: {
-		fontSize: 15,
-		fontWeight: "500",
-		marginTop: 2,
-	},
-
-	pillContainer: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-        gap: 8,
-		marginTop: 6,
-		marginBottom: 10,
-	},
-
-	pill: {
-		borderRadius: 20,
-		paddingVertical: 6,
-		paddingHorizontal: 14,
-		
-	},
-
-	pillText: {
-		fontSize: 14,
-	},
-
-	floatingCont: {
-		position: "absolute",
-		bottom: 70,
-		right: 40,
-	},
-
-	floatingBtn: {
-		backgroundColor: "#0095b6",
-		padding: 16,
-		borderRadius: 10,
-	},
-
-	addBtn: {
-		position: "absolute",
-		bottom: 30,
-		left: 20,
-		right: 20,
-		backgroundColor: "#0095b6",
-		padding: 16,
-		borderRadius: 12,
-	},
-
-	addReadexProText: {
-		color: "#fff",
-		textAlign: "center",
-		fontSize: 16,
-	},
-});
+If you find this project useful, consider giving it a ⭐ on GitHub!
