@@ -221,9 +221,9 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Developer
 
-**Mohammed Nizam**
-**Habeeb Rahman**
-**Salahudheen**
+**Mohammed Nizam** |
+**Habeeb Rahman** |
+**Salahudheen** |
 **Mohamed Safwan**
 
 
